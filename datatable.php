@@ -21,6 +21,7 @@
   <div class="container-fluid">
     <h1><strong class="title">Student Information</strong></h1>
     <div>
+      <button class="btn btn-info" onclick="insertNewData()">Insert New Row</button>
       <div class="container input-group mb-3" style="float:right;width:30%">
         <div class="input-group-prepend">
           <span class="input-group-text" id="basic-addon1">Search</span>
@@ -54,6 +55,7 @@
             while ($row = $result->fetch_assoc()) {
 
           ?>
+              <tr id="rowInsert"></tr>
               <tr id="<?php echo $row['id'] ?>">
 
                 <td class="inline_edit_data"><?php echo $row["name"]; ?></td>
@@ -162,6 +164,38 @@
       }
     };
     xhttp.open("GET", "deleteAjax.php?id=" + id, true);
+    xhttp.send();
+  }
+
+
+  //Insert New Row to the Table
+  function insertNewData() {
+    document.getElementById("rowInsert").innerHTML = "<td class='insertInput' ><input type='text' id='itemsss0' placeholder='Enter Name'></td> <td class='insertInput'><input type='text' id='itemsss1' placeholder='Enter Class'></td> <td class='insertInput'><input type='text' id='itemsss2' placeholder='Enter Roll Number'></td> <td class='insertInput'><input type='text' id='itemsss3' placeholder='Enter Email'></td> <td class='insertInput'><input type='text' id='itemsss4' placeholder='Enter Mobile Number'></td> <td class='insertInput'><input type='text' id='itemsss5' placeholder='Enter Percent'></td>  <td><button class='btn btn-success' onclick='InsertRow()'>Save</button></td>  <td><button class='btn btn-danger'>Cancel</button></td>";
+  }
+
+  function InsertRow() {
+    let element = document.getElementById("rowInsert");
+    let subElement = element.getElementsByClassName("insertInput");
+    for (var index = 0; index < subElement.length; index++) {
+      subElement[index].innerHTML = document.getElementById("itemsss" + index).value;
+console.log(  subElement[index].innerHTML);
+    }
+
+    let name = subElement[0].innerHTML;
+    let classses = subElement[1].innerHTML;
+    let roll_no = subElement[2].innerHTML;
+    let email = subElement[3].innerHTML;
+    let mobile = subElement[4].innerHTML;
+    let percent = subElement[5].innerHTML;
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("deleteOne").innerHTML = this.responseText;
+        
+
+      }
+    };
+    xhttp.open("GET", "insertData.php?name=" + name + "&" + "classes=" + classses + "&" + "roll_no=" + roll_no + "&" + "email=" + email + "&" + "mobile=" + mobile + "&" + "percent=" + percent, true);
     xhttp.send();
   }
 </script>
