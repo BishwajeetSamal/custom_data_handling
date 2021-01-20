@@ -17,6 +17,7 @@
 </head>
 
 <body>
+  <p id="deleteOne"></p>
   <div class="container-fluid">
     <h1><strong class="title">Student Information</strong></h1>
     <div>
@@ -33,7 +34,7 @@
             <th>Class</th>
             <th>Roll Number</th>
             <th>Email</th>
-            <th >Mobile</th>
+            <th>Mobile</th>
             <th>Percent (%)</th>
             <th></th>
             <th></th>
@@ -61,8 +62,8 @@
                 <td class="inline_edit_data"><?php echo $row["email"]; ?></td>
                 <td class="inline_edit_data"><?php echo $row["mob"]; ?></td>
                 <td class="inline_edit_data"><?php echo $row["percentage"]; ?></td>
-                <td class="inline_edit_data" id="update"><button type="button" class="btn btn-info" onclick="updateFun('<?php echo $row['id']; ?>')">Edit</button></td>
-                <td><button class="btn btn-danger" onclick="deleteFun(''<?php echo $row['id']; ?>'')">Delete</button></td>
+                <td class="inline_edit_data" id="update"><button class="btn btn-info" onclick="updateFun('<?php echo $row['id']; ?>')">Edit</button></td>
+                <td><button class="btn btn-danger" onclick="deleteFun('<?php echo $row['id']; ?>')">Delete</button></td>
 
               </tr>
           <?php
@@ -71,7 +72,7 @@
           $conn->close();
 
           ?>
-<h1 id="tab"></h1>
+          <h1 id="tab"></h1>
         </tbody>
       </table>
 
@@ -95,12 +96,11 @@
 <script type="text/javascript" src="jquery.js"></script>
 <script>
   function updateFun(id) {
-
     var element = document.getElementById(id);
     var subElement = element.getElementsByClassName('inline_edit_data');
 
     for (var index = 0; index < subElement.length; index++) {
-      // console.log(subElement[index].innerHTML);
+
       if (subElement[index].id === "update") {
 
         subElement[index].innerHTML = '<button class="btn btn btn-outline-success" onclick="Save(' + id + ')">Save</button>';
@@ -114,11 +114,12 @@
 
 
   function Save(id) {
+
     var element = document.getElementById(id);
     var subElement = element.getElementsByClassName('inline_edit_data');
 
     for (var i = 0; i < subElement.length; i++) {
-      
+
 
       if (subElement[i].id === "update") {
 
@@ -128,14 +129,14 @@
         subElement[i].innerHTML = '<td class="inline_edit_data">' + document.getElementById("item" + i).value + '</td>';
       }
     }
-   
-    
-    let name=subElement[0].innerHTML;
-    let classses=subElement[1].innerHTML;
-    let roll_no=subElement[2].innerHTML;
-    let email=subElement[3].innerHTML;
-    let mobile=subElement[4].innerHTML;
-    let percent=subElement[5].innerHTML;
+
+
+    let name = subElement[0].innerHTML;
+    let classses = subElement[1].innerHTML;
+    let roll_no = subElement[2].innerHTML;
+    let email = subElement[3].innerHTML;
+    let mobile = subElement[4].innerHTML;
+    let percent = subElement[5].innerHTML;
 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -149,15 +150,19 @@
 
   function deleteFun(id) {
 
-    // console.log(id);
-    // var xhttp = new XMLHttpRequest();
-    // xhttp.onreadystatechange = function() {
-    // if (this.readyState == 4 && this.status == 200) {
-    // document.getElementById("table").innerHTML = this.responseText;
-    // }
-    // };
-    // xhttp.open("GET", "jsonpage.php?id="+id, true);
-    // xhttp.send();
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("deleteOne").innerHTML = this.responseText;
+
+        //This two lines is very important for the specifically to delete the row from the table
+        var row = document.getElementById(id);
+        row.parentNode.removeChild(row);
+      }
+    };
+    xhttp.open("GET", "deleteAjax.php?id=" + id, true);
+    xhttp.send();
   }
 </script>
 
