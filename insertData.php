@@ -9,11 +9,8 @@ $email=$_GET['email'];
 $mobile=$_GET['mobile'];
 $percent=$_GET['percent'];
 
+echo $name;
 
-
-$stmt = $conn->prepare("INSERT INTO students (name,class,roll_no,email,mob,percentag)  VALUES (?, ?, ?,?, ?, ?)");
+$stmt = $conn->prepare("INSERT INTO students (name,class,roll_no,email,mob,percentage)  VALUES (?, ?, ?,?, ?, ?)");
 $stmt->bind_param("ssissi", $name,$classes,$roll_no,$email,$mobile,$percent);
 $stmt->execute();
-
-?>
-
