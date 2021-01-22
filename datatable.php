@@ -21,7 +21,7 @@
   <div class="container-fluid">
     <h1><strong class="title">Student Information</strong></h1>
     <div>
-      <button class="btn btn-info" onclick="insertNewData()">Insert New Row</button>
+      <button class="btn btn-info" id="reset" onclick="insertNewData()">Insert New Row</button>
       <div class="container input-group mb-3" style="float:right;width:30%">
         <div class="input-group-prepend">
           <span class="input-group-text" id="basic-addon1">Search</span>
@@ -45,17 +45,24 @@
 
         </thead>
         <tbody id="table_row">
+        <tr id="rowInsert"></tr>
           <?php
           include("connection.php");
 
           $sql = 'SELECT * FROM students';
           $result = $conn->query($sql);
+          
           if ($result->num_rows > 0) {
+          ?>
+            <?php
+
             // output data of each row
             while ($row = $result->fetch_assoc()) {
 
-          ?>
-              <tr id="rowInsert"></tr>
+            ?>
+           
+           <tr id="rowInsert"></tr>
+           <tr id="showData"></tr>
               <tr id="<?php echo $row['id'] ?>">
 
                 <td class="inline_edit_data"><?php echo $row["name"]; ?></td>
@@ -68,9 +75,9 @@
                 <td><button class="btn btn-danger" onclick="deleteFun('<?php echo $row['id']; ?>')">Delete</button></td>
 
               </tr>
-          <?php
+            <?php
             }
-          }
+          } 
           $conn->close();
 
           ?>
@@ -176,34 +183,37 @@
 
 
   function InsertRow() {
-  let element = document.getElementById("rowInsert");
-  let subElement = element.getElementsByClassName("insertInput");
-  for (var index = 0; index < subElement.length; index++) {
-    subElement[index].innerHTML = document.getElementById("itemsss" + index).value;
-    // console.log(  subElement[index].innerHTML);
-  }
+    let element = document.getElementById("rowInsert");
+    let subElement = element.getElementsByClassName("insertInput");
+    for (var index = 0; index < subElement.length; index++) {
+      subElement[index].innerHTML = document.getElementById("itemsss" + index).value;
+      // console.log(  subElement[index].innerHTML);
+    }
 
-  let name = subElement[0].innerHTML;
-  let classses = subElement[1].innerHTML;
-  let roll_no = subElement[2].innerHTML;
-  let email = subElement[3].innerHTML;
-  let mobile = subElement[4].innerHTML;
-  let percent = subElement[5].innerHTML;
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      // document.getElementById("deleteOne").innerHTML = this.responseText;
-      var row= document.getElementById("rowInsert");
+    let name = subElement[0].innerHTML;
+    let classses = subElement[1].innerHTML;
+    let roll_no = subElement[2].innerHTML;
+    let email = subElement[3].innerHTML;
+    let mobile = subElement[4].innerHTML;
+    let percent = subElement[5].innerHTML;
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        // document.getElementById("deleteOne").innerHTML = this.responseText;
+        var row = document.getElementById("rowInsert");
         row.parentNode.removeChild(row);
-      
-    let table_row = document.getElementById("table_row").rows.length;
-    table_row = table_row / 2;
-   console.log(document.getElementById("table_row").table_row); 
+        
+        //var ss=document.getElementById("showData").innerHTML+=
+        var table = document.getElementById('table_row');
 
+// Insert a cell at the end of the row
+var tbodyRef = table.insertRow(0);
+
+tbodyRef.innerHTML = '<tr id='+index+'><td>'+name+'</td><td>'+classses+'</td><td>'+roll_no+'</td><td>'+email+'</td><td>'+mobile+'</td><td>'+percent+'</td><td><button class="btn btn-info">Edit</button></td><td><button class="btn btn-info">Delete</button></td><tr>';  
+      }
     }
-    }
-   xhttp.open("GET", "insertData.php?name=" + name + "&" + "classes=" + classses + "&" + "roll_no=" + roll_no + "&" + "email=" + email + "&" + "mobile=" + mobile + "&" + "percent=" + percent, true);
-   xhttp.send();
+    xhttp.open("GET", "insertData.php?name=" + name + "&" + "classes=" + classses + "&" + "roll_no=" + roll_no + "&" + "email=" + email + "&" + "mobile=" + mobile + "&" + "percent=" + percent, true);
+    xhttp.send();
   }
 </script>
 
