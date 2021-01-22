@@ -45,13 +45,13 @@
 
         </thead>
         <tbody id="table_row">
-        <tr id="rowInsert"></tr>
+          <tr id="rowInsert"></tr>
           <?php
           include("connection.php");
 
           $sql = 'SELECT * FROM students';
           $result = $conn->query($sql);
-          
+
           if ($result->num_rows > 0) {
           ?>
             <?php
@@ -60,9 +60,7 @@
             while ($row = $result->fetch_assoc()) {
 
             ?>
-           
-           <tr id="rowInsert"></tr>
-           <tr id="showData"></tr>
+
               <tr id="<?php echo $row['id'] ?>">
 
                 <td class="inline_edit_data"><?php echo $row["name"]; ?></td>
@@ -75,9 +73,9 @@
                 <td><button class="btn btn-danger" onclick="deleteFun('<?php echo $row['id']; ?>')">Delete</button></td>
 
               </tr>
-            <?php
+          <?php
             }
-          } 
+          }
           $conn->close();
 
           ?>
@@ -105,7 +103,10 @@
 <script type="text/javascript" src="jquery.js"></script>
 <script>
   function updateFun(id) {
+    console.log(id);
     var element = document.getElementById(id);
+    console.log(element);
+
     var subElement = element.getElementsByClassName('inline_edit_data');
 
     for (var index = 0; index < subElement.length; index++) {
@@ -163,7 +164,7 @@
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        document.getElementById("deleteOne").innerHTML = this.responseText;
+        // document.getElementById("deleteOne").innerHTML = this.responseText;
 
         //This two lines is very important for the specifically to delete the row from the table
         var row = document.getElementById(id);
@@ -199,17 +200,19 @@
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        // document.getElementById("deleteOne").innerHTML = this.responseText;
+
+        var id = this.responseText;
         var row = document.getElementById("rowInsert");
         row.parentNode.removeChild(row);
-        
+
         //var ss=document.getElementById("showData").innerHTML+=
         var table = document.getElementById('table_row');
+        console.log(table);
+        // Insert a cell at the end of the row
+        var tbodyRef = table.insertRow(-1);
+        tbodyRef.setAttribute("id", +id); //This helps to set the id to the bydefault produced <tr> by insertrow() function
 
-// Insert a cell at the end of the row
-var tbodyRef = table.insertRow(0);
-
-tbodyRef.innerHTML = '<tr id='+index+'><td>'+name+'</td><td>'+classses+'</td><td>'+roll_no+'</td><td>'+email+'</td><td>'+mobile+'</td><td>'+percent+'</td><td><button class="btn btn-info">Edit</button></td><td><button class="btn btn-info">Delete</button></td><tr>';  
+        tbodyRef.innerHTML = '<td class="inline_edit_data">' + name + '</td><td class="inline_edit_data">' + classses + '</td><td class="inline_edit_data">' + roll_no + '</td><td class="inline_edit_data">' + email + '</td><td class="inline_edit_data">' + mobile + '</td><td class="inline_edit_data">' + percent + '</td> <td class="inline_edit_data" id="update"><button class="btn btn-info" onclick="updateFun(' + id + ')">Edit</button></td><td><button class="btn btn-danger" onclick="deleteFun(' + id + ')">Delete</button></td>';
       }
     }
     xhttp.open("GET", "insertData.php?name=" + name + "&" + "classes=" + classses + "&" + "roll_no=" + roll_no + "&" + "email=" + email + "&" + "mobile=" + mobile + "&" + "percent=" + percent, true);
