@@ -21,7 +21,7 @@
   <div class="container-fluid">
     <h1><strong class="title">Student Information</strong></h1>
     <div>
-      <button class="btn btn-info" id="reset" onclick="insertNewData()">Insert New Row</button>
+      <button class="btn btn-info"  onclick="insertNewData()">Insert New Row</button>
       <div class="container input-group mb-3" style="float:right;width:30%">
         <div class="input-group-prepend">
           <span class="input-group-text" id="basic-addon1">Search</span>
@@ -45,7 +45,7 @@
 
         </thead>
         <tbody id="table_row">
-          <tr id="rowInsert"></tr>
+        <tr id="rowInsert"></tr>
           <?php
           include("connection.php");
 
@@ -54,6 +54,7 @@
 
           if ($result->num_rows > 0) {
           ?>
+         
             <?php
 
             // output data of each row
@@ -178,7 +179,7 @@
 
   //Insert New Row to the Table
   function insertNewData() {
-    console.log("clicked");
+    console.log(document.getElementById("rowInsert"));
     document.getElementById("rowInsert").innerHTML = "<td class='insertInput' id='stop_data'><input type='text' id='itemsss0' placeholder='Enter Name'></td> <td class='insertInput'><input type='text' id='itemsss1' placeholder='Enter Class'></td> <td class='insertInput'><input type='text' id='itemsss2' placeholder='Enter Roll Number'></td> <td class='insertInput'><input type='text' id='itemsss3' placeholder='Enter Email'></td> <td class='insertInput'><input type='text' id='itemsss4' placeholder='Enter Mobile Number'></td> <td class='insertInput'><input type='text' id='itemsss5' placeholder='Enter Percent'></td>  <td><button class='btn btn-success' onclick='InsertRow()'>Save</button></td>  <td><button class='btn btn-danger'>Cancel</button></td>";
   }
 
@@ -212,7 +213,7 @@
         var tbodyRef = table.insertRow(-1);
         tbodyRef.setAttribute("id", +id); //This helps to set the id to the bydefault produced <tr> by insertrow() function
 
-        tbodyRef.innerHTML = '<td class="inline_edit_data">' + name + '</td><td class="inline_edit_data">' + classses + '</td><td class="inline_edit_data">' + roll_no + '</td><td class="inline_edit_data">' + email + '</td><td class="inline_edit_data">' + mobile + '</td><td class="inline_edit_data">' + percent + '</td> <td class="inline_edit_data" id="update"><button class="btn btn-info" onclick="updateFun(' + id + ')">Edit</button></td><td><button class="btn btn-danger" onclick="deleteFun(' + id + ')">Delete</button></td>';
+        tbodyRef.innerHTML = '<tr id='+id+'><td class="inline_edit_data">' + name + '</td><td class="inline_edit_data">' + classses + '</td><td class="inline_edit_data">' + roll_no + '</td><td class="inline_edit_data">' + email + '</td><td class="inline_edit_data">' + mobile + '</td><td class="inline_edit_data">' + percent + '</td> <td class="inline_edit_data" id="update"><button class="btn btn-info" onclick="updateFun(' + id + ')">Edit</button></td><td><button class="btn btn-danger" onclick="deleteFun(' + id + ')">Delete</button></td></tr>';
       }
     }
     xhttp.open("GET", "insertData.php?name=" + name + "&" + "classes=" + classses + "&" + "roll_no=" + roll_no + "&" + "email=" + email + "&" + "mobile=" + mobile + "&" + "percent=" + percent, true);
