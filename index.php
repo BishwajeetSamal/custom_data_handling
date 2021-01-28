@@ -23,6 +23,10 @@ $total_pages = ceil($total_records / $limit);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
+    .clearfix{
+      float: right;
+      margin-right: 5%;
+    }
   </style>
 </head>
 
