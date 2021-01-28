@@ -1,3 +1,13 @@
+<?php
+include('connection.php'); 
+$limit = 4;
+$sql = "SELECT COUNT(id) FROM students";  
+$rs_result = mysqli_query($conn, $sql);  
+$row = mysqli_fetch_row($rs_result);  
+$total_records = $row[0];
+ 
+$total_pages = ceil($total_records / $limit); 
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -21,86 +31,67 @@
   <div class="container-fluid">
     <h1><strong class="title">Student Information</strong></h1>
     <div>
-      <button class="btn btn-info" id="insertOneDate" onclick="insertNewData(0)">Insert New Row</button>
+      <button class="btn btn-info" id="insertOneDate" onclick="insertNewData()">Insert New Row</button>
       <div class="container input-group mb-3" style="float:right;width:30%">
         <div class="input-group-prepend">
           <span class="input-group-text" id="basic-addon1">Search</span>
         </div>
         <input type="text" class="form-control" aria-describedby="basic-addon1">
       </div>
-      <table class="table" id="table_data_for_students">
-        <thead>
-          <tr class="table-success">
-            <th>Name</th>
-            <th>Class</th>
-            <th>Roll Number</th>
-            <th>Email</th>
-            <th>Mobile</th>
-            <th>Percent (%)</th>
-            <th></th>
-            <th></th>
-
-
-          </tr>
-
-        </thead>
-        <tbody id="table_row">
-          <?php
-          include("connection.php");
-
-          $sql = 'SELECT * FROM students';
-          $result = $conn->query($sql);
-
-          if ($result->num_rows > 0) {
-          ?>
-
-            <?php
-
-            // output data of each row
-            while ($row = $result->fetch_assoc()) {
-
-            ?>
-
-              <tr id="<?php echo $row['id'] ?>">
-
-                <td class="inline_edit_data"><?php echo $row["name"]; ?></td>
-                <td class="inline_edit_data"><?php echo $row["class"]; ?></td>
-                <td class="inline_edit_data"><?php echo $row["roll_no"]; ?></td>
-                <td class="inline_edit_data"><?php echo $row["email"]; ?></td>
-                <td class="inline_edit_data"><?php echo $row["mob"]; ?></td>
-                <td class="inline_edit_data"><?php echo $row["percentage"]; ?></td>
-                <td class="inline_edit_data" id="update"><button class="btn btn-info" onclick="updateFun('<?php echo $row['id']; ?>')">Edit</button></td>
-                <td><button class="btn btn-danger" onclick="deleteFun('<?php echo $row['id']; ?>')">Delete</button></td>
-
-              </tr>
-          <?php
-            }
-          }
-          $conn->close();
-
-          ?>
-
-        </tbody>
-      </table>
-
+      <div id="target-content">...loading</div>
+    
+      <div class="clearfix">
+               
+               <ul class="pagination">
+                         <?php 
+               if(!empty($total_pages)){
+                 for($i=1; $i<=$total_pages; $i++){
+                     if($i == 1){
+                       ?>
+                     <li class="pageitem " id="<?php echo $i;?>"><a href="JavaScript:Void(0);" data-id="<?php echo $i;?>" class="page-link" ><?php echo $i;?></a></li>
+                                   
+                     <?php 
+                     }
+                     else{
+                       ?>
+                     <li class="pageitem" id="<?php echo $i;?>"><a href="JavaScript:Void(0);" class="page-link" data-id="<?php echo $i;?>"><?php echo $i;?></a></li>
+                     <?php
+                     }
+                 }
+               }
+                     ?>
+               </ul>
+                    </ul>
+                 </div>
 
     </div>
-    <div style="float:right">
-      <nav aria-label="Page navigation example">
-        <ul class="pagination">
-          <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-          <li class="page-item"><a class="page-link" href="#">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">2</a></li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
-          <li class="page-item"><a class="page-link" href="#">4</a></li>
-          <li class="page-item"><a class="page-link" href="#">5</a></li>
-          <li class="page-item"><a class="page-link" href="#">Next</a></li>
-        </ul>
-      </nav>
-    </div>
+
   </div>
 </body>
 <script type="text/javascript" src="jquery.js"></script>
+<script>
+	$(document).ready(function() {
+		$("#target-content").load("pagination.php");
+		$(".page-link").click(function(){
+			var id = $(this).attr("data-id");
+			var select_id = $(this).parent().attr("id");
+			$.ajax({
+				url: "pagination.php",
+				type: "GET",
+				data: {
+					page : id
+				},
+				cache: false,
+				success: function(dataResult){
+					$("#target-content").html(dataResult);
+					$(".pageitem").removeClass("active");
+					$("#"+select_id).addClass("active");
+					
+				}
+			});
+		});
+    });
+</script>
 <script>
   function updateFun(id) {
     console.log(id);
@@ -224,6 +215,10 @@
     xhttp.open("GET", "insertData.php?name=" + name + "&" + "classes=" + classses + "&" + "roll_no=" + roll_no + "&" + "email=" + email + "&" + "mobile=" + mobile + "&" + "percent=" + percent, true);
     xhttp.send();
   }
+
+
+
+
 </script>
 
 </html>
